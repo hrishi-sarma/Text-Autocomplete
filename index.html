@@ -1,0 +1,135 @@
+<html>
+<head>
+
+  <title>browsinhistory</title>
+  <style>
+      body {
+          background-color: #000000; 
+          color: #FFFFFF; 
+          margin: 0; 
+          padding: 0; 
+      }
+      #recommends {
+          position: relative;
+          width: 300px;
+          margin: 50px auto;
+      }
+
+      #textbox {
+          width: 100%;
+          padding: 10px;
+          font-size: 24px;
+          color: #ffffff;
+          background-color: #000000;
+          border: none;
+          overflow: hidden;
+          text-align: center;
+      }
+
+      #input {
+          width: 100%;
+          padding: 10px;
+          font-size: 16px;
+          color: #FFFFFF;
+          background-color: #000000;
+      }
+
+      #recommendslist {
+          position: absolute;
+          z-index: 1;
+          width: 100%;
+          list-style: none;
+          padding: 0%;
+          margin: 0;
+          border: 1px solid #ccc;
+          border-top: none;
+          display: none;
+      }
+
+      .recommendsitem {
+          padding: 10px;
+          cursor: pointer;
+          background-color: #000000;
+          color: #FFFFFF;
+      }
+
+      .recommendsitem:hover {
+          background-color: #1a1a1a;
+      }
+
+      .x {
+          position: absolute;
+          right: 5px;
+          top: 5px;
+          cursor: pointer;
+          color: #FFFFFF;
+      }
+
+  </style>
+</head>
+<body>
+
+<div id="recommends">
+   <textarea id="textbox" readonly placeholder="Someone's Browsing History"></textarea>
+  <input type="text" id="input" placeholder="seek answers here...">
+  <ul id="recommendslist"></ul>
+</div>
+
+<script>
+    const arr = [
+      "What happens if you microwave a microwave?", "Why is my cat staring at me?", "Could I milk a dinosaur?", "What is the capital of Berlin?", "Can I eat a whale?", "Why do I feel like someone's watching me at night?", "Best cat memes", "How to boil water"
+    ];
+
+    const input = document.getElementById("input");
+    const recommendslist = document.getElementById("recommendslist");
+
+    input.addEventListener("input", function(){
+      const search = input.value.toLowerCase();
+      const filtered = arr.filter(item => item.toLowerCase().startsWith(search));
+        display(filtered);
+    });
+
+    function display(filtered){
+      recommendslist.innerHTML = "";
+      if(filtered.length > 0){
+          filtered.forEach(item => {
+              const listStuff = document.createElement("li");
+              listStuff.classList.add("recommendsitem");
+              listStuff.textContent = item;
+
+              const x = document.createElement("span");
+              x.classList.add("x");
+              x.innerHTML = "&#10006;";
+              x.addEventListener("click", function (event) {
+                  event.stopPropagation();
+                  remove(item);
+              });
+
+              listStuff.appendChild(x);
+              listStuff.addEventListener("click", function () {
+                  input.value = item;
+                  recommendslist.style.display = "none";
+              });
+              recommendslist.appendChild(x);
+
+              recommendslist.appendChild(listStuff);
+        });
+      recommendslist.style.display = "list-item";
+      } 
+      else {
+            recommendslist.style.display = "none";
+        }
+    }
+
+    function remove(item){
+        const index = arr.indexOf(item);
+        if(index >= 0){
+            arr.splice(index, 1);
+            display(arr);
+        }
+    }
+
+</script>
+
+</body>
+</html>
